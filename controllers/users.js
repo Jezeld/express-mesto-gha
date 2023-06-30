@@ -15,13 +15,13 @@ const createUser = (req, res) => {
 
 const getUsers = (req, res) => {
   User.find({})
-    .orFail(() => new Error('Not Found'))
     .then((users) => res.send(users))
     .catch(() => res.status(500).send({ message: 'На сервере произошла ошибка' }));
 };
 
 const getUser = (req, res) => {
   User.findById(req.params.id)
+    .orFail(() => new Error('Not Found'))
     .then((user) => res.send(user))
     .catch((err) => {
       if (err.stack.startsWith('CastError')) {
