@@ -17,6 +17,10 @@ app.use((req, res, next) => {
 app.use('/users', require('./routes/users'));
 app.use('/cards', require('./routes/cards'));
 
+app.use('/', (reg, res) => {
+  res.status(404).send({ message: 'Что-то пошло не так...' });
+});
+
 app.listen(PORT, () => {
   // Если всё работает, консоль покажет, какой порт приложение слушает
   console.log(`server starting, app listening on port ${PORT}`);
