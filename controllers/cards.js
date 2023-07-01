@@ -1,3 +1,4 @@
+const { ERROR_BAD_REQUEST, ERROR_NOT_FOUND, ERROR_DEFAULT } = require('../errors/errors');
 const Card = require('../models/card');
 
 const createCard = (req, res) => {
@@ -7,9 +8,9 @@ const createCard = (req, res) => {
     .then((card) => res.status(201).send({ data: card }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(400).send({ message: 'Переданные данные некорректны' });
+        res.status(ERROR_BAD_REQUEST).send({ message: 'Переданные данные некорректны' });
       } else {
-        res.status(500).send({ message: 'На сервере произошла ошибка' });
+        res.status(ERROR_DEFAULT).send({ message: 'На сервере произошла ошибка' });
       }
     });
 };
@@ -17,7 +18,7 @@ const createCard = (req, res) => {
 const getCards = (req, res) => {
   Card.find({})
     .then((cards) => res.status(200).send({ data: cards }))
-    .catch(() => res.status(500).send({ message: 'На сервере произошла ошибка' }));
+    .catch(() => res.status(ERROR_DEFAULT).send({ message: 'На сервере произошла ошибка' }));
 };
 
 const deleteCard = (req, res) => {
@@ -25,12 +26,12 @@ const deleteCard = (req, res) => {
     .orFail(() => new Error('Not Found'))
     .then((card) => res.status(200).send({ data: card }))
     .catch((err) => {
-      if (err.stack.startsWith('CastError')) {
-        res.status(400).send({ message: 'Переданные данные некорректны' });
+      if (err.name === 'CastError') {
+        res.status(ERROR_BAD_REQUEST).send({ message: 'Переданные данные некорректны' });
       } else if (err.message === 'Not Found') {
-        res.status(404).send({ message: 'Пользователь не найден' });
+        res.status(ERROR_NOT_FOUND).send({ message: 'Карточка не найдена' });
       } else {
-        res.status(500).send({ message: 'На сервере произошла ошибка' });
+        res.status(ERROR_DEFAULT).send({ message: 'На сервере произошла ошибка' });
       }
     });
 };
@@ -40,12 +41,12 @@ const likeCard = (req, res) => {
     .orFail(() => new Error('Not Found'))
     .then((card) => res.status(200).send({ data: card }))
     .catch((err) => {
-      if (err.stack.startsWith('CastError')) {
-        res.status(400).send({ message: 'Переданные данные некорректны' });
+      if (err.name === 'CastError') {
+        res.status(ERROR_BAD_REQUEST).send({ message: 'Переданные данные некорректны' });
       } else if (err.message === 'Not Found') {
-        res.status(404).send({ message: 'Пользователь не найден' });
+        res.status(ERROR_NOT_FOUND).send({ message: 'Карточка не найдена' });
       } else {
-        res.status(500).send({ message: 'На сервере произошла ошибка' });
+        res.status(ERROR_DEFAULT).send({ message: 'На сервере произошла ошибка' });
       }
     });
 };
@@ -55,12 +56,12 @@ const dislikeCard = (req, res) => {
     .orFail(() => new Error('Not Found'))
     .then((card) => res.status(200).send({ data: card }))
     .catch((err) => {
-      if (err.stack.startsWith('CastError')) {
-        res.status(400).send({ message: 'Переданные данные некорректны' });
+      if (err.name === 'CastError') {
+        res.status(ERROR_BAD_REQUEST).send({ message: 'Переданные данные некорректны' });
       } else if (err.message === 'Not Found') {
-        res.status(404).send({ message: 'Пользователь не найден' });
+        res.status(ERROR_NOT_FOUND).send({ message: 'Карточка не найдена' });
       } else {
-        res.status(500).send({ message: 'На сервере произошла ошибка' });
+        res.status(ERROR_DEFAULT).send({ message: 'На сервере произошла ошибка' });
       }
     });
 };
