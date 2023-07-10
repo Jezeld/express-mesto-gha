@@ -6,7 +6,6 @@ const NotFoundError = require('../errors/notfound');
 
 const createCard = (req, res, next) => {
   const owner = req.user._id;
-  console.log('owner', owner);
   const { name, link } = req.body;
   Card.create({ name, link, owner })
     .then((card) => res.status(201).send({ data: card }))

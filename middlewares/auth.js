@@ -4,11 +4,11 @@ const UnauthorizedError = require('../errors/unauthorized');
 const auth = (req, res, next) => {
   const { authorization } = req.headers;
 
-  if (!authorization || !authorization.startsWith('Bearer ')) {
+  if (!authorization) {
     next(new UnauthorizedError('Необходимо авторизоваться'));
   }
 
-  const token = authorization.replace('Bearer ', '');
+  const token = authorization.startsWith('Bearer ') ? authorization.replace('Bearer ', '') : authorization;
 
   let payload;
 
@@ -19,7 +19,7 @@ const auth = (req, res, next) => {
   }
 
   req.user = payload;
-  console.log(payload);
   next();
 };
+
 module.exports = auth;
