@@ -1,6 +1,8 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+require('dotenv').config();
+const { errors } = require('celebrate');
 const InternalServerError = require('./errors/servererror');
 const NotFoundError = require('./errors/notfound');
 
@@ -11,14 +13,9 @@ const app = express();
 mongoose.connect('mongodb://localhost:27017/mestodb');
 app.use(bodyParser.json());
 
-// app.use((req, res, next) => {
-//   req.user = {
-//     _id: '64aba74d8fda4838aa2cb79e', // вставьте сюда _id созданного в предыдущем пункте пользователя
-//   };
-//   next();
-// });
-
 app.use(require('./routes'));
+
+app.use(errors());
 
 // app.use('/users', require('./routes/users'));
 // app.use('/cards', require('./routes/cards'));
