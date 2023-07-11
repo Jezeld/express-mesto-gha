@@ -1,4 +1,5 @@
 // const { ERROR_BAD_REQUEST, ERROR_NOT_FOUND, ERROR_DEFAULT } = require('../errors/errors');
+const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
@@ -8,8 +9,6 @@ const NotFoundError = require('../errors/notfound');
 const UnauthorizedError = require('../errors/unauthorized');
 
 const { NODE_ENV, JWT_SECRET } = process.env;
-
-// const JWT_SECRET = 'some-secret-key';
 
 const createUser = (req, res, next) => {
   const {
@@ -21,7 +20,7 @@ const createUser = (req, res, next) => {
     }))
     .then((user) => res.status(201).send(user))
     .catch((err) => {
-      if (err.name === 'ValidationError') {
+      if (err instanceof mongoose.Error.ValidationError) {
         next(new BadRequestError('Переданные данные некорректны'));
         return;
       } if (err.code === 11000) {
@@ -48,7 +47,7 @@ const getUser = (req, res, next) => {
       }
     })
     .catch((err) => {
-      if (err.name === 'CastError') {
+      if (err instanceof mongoose.Error.CastError) {
         next(new BadRequestError('Переданные данные некорректы'));
         return;
       }
@@ -61,7 +60,7 @@ const updateUserInfo = (req, res, next) => {
   User.findByIdAndUpdate(req.user._id, { name, about }, { new: true, runValidators: true })
     .then((user) => res.status(200).send(user))
     .catch((err) => {
-      if (err.name === 'ValidationError') {
+      if (err instanceof mongoose.Error.ValidationError) {
         next(new BadRequestError('Переданные данные некорректны'));
       } else {
         next(err);
@@ -74,7 +73,7 @@ const updateAvatar = (req, res, next) => {
   User.findByIdAndUpdate(req.user._id, { avatar }, { new: true, runValidators: true })
     .then((user) => res.status(200).send(user))
     .catch((err) => {
-      if (err.name === 'ValidationError') {
+      if (err instanceof mongoose.Error.ValidationError) {
         next(new BadRequestError('Переданные данные некорректны'));
       } else {
         next(err);
@@ -117,5 +116,4 @@ module.exports = {
   updateAvatar,
   getUserInfo,
   login,
-  JWT_SECRET,
 };

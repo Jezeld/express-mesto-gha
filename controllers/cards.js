@@ -1,4 +1,4 @@
-// const { ERROR_BAD_REQUEST, ERROR_NOT_FOUND, ERROR_DEFAULT } = require('../errors/errors');
+const mongoose = require('mongoose');
 const Card = require('../models/card');
 const BadRequestError = require('../errors/badrequest');
 const ForbiddenError = require('../errors/forbidden');
@@ -10,7 +10,7 @@ const createCard = (req, res, next) => {
   Card.create({ name, link, owner })
     .then((card) => res.status(201).send({ data: card }))
     .catch((err) => {
-      if (err.name === 'ValidationError') {
+      if (err instanceof mongoose.Error.ValidationError) {
         next(new BadRequestError('Переданные данные некорректны'));
       } else {
         next(err);
@@ -48,7 +48,7 @@ const likeCard = (req, res, next) => {
       }
     })
     .catch((err) => {
-      if (err.name === 'ValidationError') {
+      if (err instanceof mongoose.Error.CastError) {
         next(new BadRequestError('Переданные данные некорректны'));
       } else {
         next(err);
@@ -66,7 +66,7 @@ const dislikeCard = (req, res, next) => {
       }
     })
     .catch((err) => {
-      if (err.name === 'ValidationError') {
+      if (err instanceof mongoose.Error.CastError) {
         next(new BadRequestError('Переданные данные некорректны'));
       } else {
         next(err);
