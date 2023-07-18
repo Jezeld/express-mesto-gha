@@ -55,6 +55,13 @@ const getUser = (req, res, next) => {
     });
 };
 
+const getUserInfo = (req, res, next) => {
+  User.findById(req.user._id)
+    .orFail(new NotFoundError('Пользователь не найден'))
+    .then((user) => res.send(user))
+    .catch(next);
+};
+
 const updateUserInfo = (req, res, next) => {
   const { name, about } = req.body;
   User.findByIdAndUpdate(req.user._id, { name, about }, { new: true, runValidators: true })
@@ -79,13 +86,6 @@ const updateAvatar = (req, res, next) => {
         next(err);
       }
     });
-};
-
-const getUserInfo = (req, res, next) => {
-  User.findById(req.user._id)
-    .orFail(new NotFoundError('Пользователь не найден'))
-    .then((user) => res.send(user))
-    .catch(next);
 };
 
 const login = (req, res, next) => {

@@ -1,18 +1,15 @@
 {
   "folders": [
-	{
-		"path": "../react-mesto-auth"
-	},
-	{
-		"path": "../yandex-practicum/шпаргалка"
-	},
-	{
-		"path": "../api"
-	},
-	{
-		"path": "."
-	}
-],
+    {
+      "path": "../тесты"
+    },
+    {
+      "path": "."
+    },
+    {
+      "path": "../yandex-practicum/шпаргалка"
+    }
+  ],
   "settings": {
     "liveServer.settings.multiRootWorkspaceName": "calorie-zen"
   }

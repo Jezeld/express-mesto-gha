@@ -3,14 +3,19 @@ const mongoose = require('mongoose');
 require('dotenv').config();
 const { errors } = require('celebrate');
 const errorProcessor = require('./middlewares/errorprocessor');
+const { requestLogger, errorLogger } = require('./middlewares/logger');
 const NotFoundError = require('./errors/notfound');
 
 const { PORT = 3000 } = process.env;
 const app = express();
-mongoose.connect('mongodb://localhost:27017/mestodb');
+mongoose.connect('mongodb://127.0.0.1/mestodb');
 app.use(express.json());
 
+app.use(requestLogger); // подключаем логгер запросов
+
 app.use(require('./routes'));
+
+app.use(errorLogger); // подключаем логгер ошибок
 
 app.use(errors());
 
@@ -20,7 +25,10 @@ app.use('*', (reg, res, next) => {
 
 app.use(errorProcessor);
 
-app.listen(PORT, () => {
-  // Если всё работает, консоль покажет, какой порт приложение слушает
-  console.log(`server starting, app listening on port ${PORT}`);
+app.listen(PORT, (err) => {
+  if (err) {
+    console.log(err);
+  } else {
+    console.log(`server starting, app listening on port ${PORT}`);
+  }
 });
